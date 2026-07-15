@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservations — Ember &amp; Marrow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a class="brand" href="index.html">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" stroke="#D4AF37" stroke-width="1.4"/>
+        <path d="M13 24l7-14 7 14" stroke="#D4AF37" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M16 20h8" stroke="#D4AF37" stroke-width="1.4"/>
+      </svg>
+      Ember &amp; Marrow
+    </a>
+    <ul class="navlinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="testimonials.html">Testimonials</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="reservations.html">Reservations</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<main>
+  <section class="wrap" style="padding:64px 0 20px;text-align:center;">
+    <p class="eyebrow">Reservations</p>
+    <h1>Book your table.</h1>
+  </section>
+
+  <section class="wrap section" style="border-top:none;padding-top:10px;">
+    <div class="res-shell">
+      <div class="res-progress">
+        <div class="bit active"><i></i></div>
+        <div class="bit"><i></i></div>
+        <div class="bit"><i></i></div>
+        <div class="bit"><i></i></div>
+      </div>
+
+      <div class="res-card">
+
+        <!-- Step 1: Date, time, party size -->
+        <div class="res-step active" data-step="datetime">
+          <h3 style="margin-bottom:6px;">When would you like to dine?</h3>
+          <p style="opacity:.7;margin-top:0;">Choose a date, time, and party size.</p>
+
+          <div class="field" style="margin-top:20px;">
+            <label for="res-date">Date</label>
+            <input type="date" id="res-date">
+          </div>
+
+          <div class="field">
+            <label>Time</label>
+            <div class="pill-row">
+              <button type="button" class="pill" data-time="5:30 PM">5:30 PM</button>
+              <button type="button" class="pill" data-time="6:00 PM">6:00 PM</button>
+              <button type="button" class="pill" data-time="6:30 PM">6:30 PM</button>
+              <button type="button" class="pill" data-time="7:30 PM">7:30 PM</button>
+              <button type="button" class="pill" data-time="8:00 PM">8:00 PM</button>
+              <button type="button" class="pill" data-time="8:30 PM">8:30 PM</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Party Size</label>
+            <div class="pill-row">
+              <button type="button" class="pill" data-party="2">2</button>
+              <button type="button" class="pill" data-party="4">4</button>
+              <button type="button" class="pill" data-party="6">6</button>
+              <button type="button" class="pill" data-party="8">8</button>
+              <button type="button" class="pill" data-party="10+">10+</button>
+            </div>
+          </div>
+
+          <div class="res-actions">
+            <span></span>
+            <button type="button" class="btn btn-solid" data-next>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Contact details -->
+        <div class="res-step" data-step="details">
+          <h3 style="margin-bottom:6px;">Your details</h3>
+          <p style="opacity:.7;margin-top:0;">We'll send your confirmation here.</p>
+
+          <div class="field" style="margin-top:20px;">
+            <label for="res-name">Full name</label>
+            <input type="text" id="res-name">
+          </div>
+          <div class="field">
+            <label for="res-email">Email</label>
+            <input type="email" id="res-email">
+          </div>
+          <div class="field">
+            <label for="res-phone">Phone (optional)</label>
+            <input type="tel" id="res-phone">
+          </div>
+          <div class="field">
+            <label for="res-notes">Special requests (optional)</label>
+            <textarea id="res-notes" rows="3" placeholder="Allergies, celebrations, seating preference..."></textarea>
+          </div>
+
+          <div class="res-actions">
+            <button type="button" class="btn btn-outline" data-back>Back</button>
+            <button type="button" class="btn btn-solid" data-next>Review</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review -->
+        <div class="res-step" data-step="review">
+          <h3 style="margin-bottom:6px;">Review your reservation</h3>
+          <p style="opacity:.7;margin-top:0;">Please confirm the details below.</p>
+
+          <div class="res-summary" style="margin-top:20px;">
+            <dl>
+              <dt>Date</dt><dd id="sum-date">—</dd>
+              <dt>Time</dt><dd id="sum-time">—</dd>
+              <dt>Party</dt><dd id="sum-party">—</dd>
+              <dt>Name</dt><dd id="sum-name">—</dd>
+            </dl>
+          </div>
+
+          <div class="res-actions">
+            <button type="button" class="btn btn-outline" data-back>Back</button>
+            <button type="button" class="btn btn-solid" data-confirm>Confirm Reservation</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Confirmation -->
+        <div class="res-step" data-step="confirmed" style="text-align:center;">
+          <svg class="res-confirm-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="28" stroke="#D4AF37" stroke-width="2"/>
+            <path d="M18 31l8 8 16 -18" stroke="#D4AF37" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>You're booked.</h3>
+          <p style="opacity:.75;max-width:40ch;margin:0 auto;">A confirmation has been sent to your email. We look forward to hosting you at Ember &amp; Marrow.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <div>
+      <p class="eyebrow">Ember &amp; Marrow</p>
+      <p class="fine">210 Founders Row · Dinner nightly from 5:30pm</p>
+    </div>
+    <p class="fine">&copy; 2026 Ember &amp; Marrow. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
