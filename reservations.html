@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="styles.css">
+<!-- EmailJS: sends the confirmation email straight from the browser, no backend needed -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -99,7 +101,7 @@
             <input type="text" id="res-name">
           </div>
           <div class="field">
-            <label for="res-email"><a href="mailto:ortloyadiel01@gmail.com"></a>Email</label>
+            <label for="res-email">Email</label>
             <input type="email" id="res-email">
           </div>
           <div class="field">
@@ -131,12 +133,14 @@
             </dl>
           </div>
 
+          <p id="res-error" style="display:none;color:#c0392b;margin-top:14px;font-size:0.9rem;"></p>
+
           <div class="res-actions">
             <button type="button" class="btn btn-outline" data-back>Back</button>
             <button type="button" class="btn btn-solid" data-confirm>Confirm Reservation</button>
           </div>
         </div>
-<a href=
+
         <!-- Step 4: Confirmation -->
         <div class="res-step" data-step="confirmed" style="text-align:center;">
           <svg class="res-confirm-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
