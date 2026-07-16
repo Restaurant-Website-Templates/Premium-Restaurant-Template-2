@@ -3,6 +3,20 @@
 // listeners are passive where possible, and DOM reveals use IntersectionObserver
 // instead of scroll polling, to keep the main thread free and interactions smooth.
 
+// ---- EmailJS setup ----
+// 1. Create a free account at https://www.emailjs.com
+// 2. Add an Email Service (e.g. Gmail) — this gives you a SERVICE ID
+// 3. Create an Email Template for the reservation confirmation — this gives you a TEMPLATE ID
+// 4. Find your Public Key under Account > General
+// 5. Paste all three values below.
+const EMAILJS_PUBLIC_KEY = "7SR_zu6NO_u0TNU2W";
+const EMAILJS_SERVICE_ID = "service_practice";
+const EMAILJS_TEMPLATE_ID = "template_cj5llwk";
+
+if (window.emailjs && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // Mobile nav
@@ -165,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const steps = Array.from(resCard.querySelectorAll('.res-step'));
     const bits = Array.from(document.querySelectorAll('.res-progress .bit'));
     let current = 0;
-    const state = { date:null, time:null, party:null, name:'', email:'', phone:'' };
+    const state = { date:null, time:null, party:null, name:'', email:'', phone:'', notes:'' };
 
     function updateProgress(){
       bits.forEach((b,i)=>{
@@ -229,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
           state.name = nameEl.value.trim();
           state.email = emailEl.value.trim();
           state.phone = resCard.querySelector('#res-phone').value.trim();
+          state.notes = resCard.querySelector('#res-notes').value.trim();
         }
         goToStep(current + 1);
       });
@@ -236,8 +251,50 @@ document.addEventListener('DOMContentLoaded', () => {
     resCard.querySelectorAll('[data-back]').forEach(btn=>{
       btn.addEventListener('click', ()=> goToStep(current - 1));
     });
-    resCard.querySelector('[data-confirm]')?.addEventListener('click', ()=>{
-      goToStep(current + 1);
+
+    // ---- Confirm button: send the confirmation email, then show the "You're booked" step ----
+    const confirmBtn = resCard.querySelector('[data-confirm]');
+    const errorEl = document.getElementById('res-error');
+
+    confirmBtn?.addEventListener('click', () => {
+      if (errorEl) { errorEl.style.display = 'none'; }
+
+      // If EmailJS hasn't been configured yet, skip straight to the confirmation screen
+      // so the flow still works while you're setting things up.
+      if (!window.emailjs || EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY") {
+        console.warn('EmailJS is not configured yet — skipping email send. See the top of script.js.');
+        goToStep(current + 1);
+        return;
+      }
+
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Sending confirmation…';
+
+      const templateParams = {
+        to_name: state.name,
+        to_email: state.email,
+        res_date: state.date,
+        res_time: state.time,
+        res_party: state.party,
+        res_phone: state.phone || 'Not provided',
+        res_notes: state.notes || 'None',
+      };
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        .then(() => {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Confirm Reservation';
+          goToStep(current + 1);
+        })
+        .catch((err) => {
+          console.error('EmailJS error:', err);
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Confirm Reservation';
+          if (errorEl) {
+            errorEl.textContent = "We couldn't send your confirmation email, but you're welcome to try again or call us to confirm.";
+            errorEl.style.display = 'block';
+          }
+        });
     });
 
     updateProgress();
